@@ -1,0 +1,22 @@
+{
+  "name": "checkout-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx src/index.ts",
+    "demo:incident": "curl -X POST http://localhost:8080/incident",
+    "demo:reset": "curl -X POST http://localhost:8080/reset"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "fastify": "^5.12.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.12"
+  }
+}
