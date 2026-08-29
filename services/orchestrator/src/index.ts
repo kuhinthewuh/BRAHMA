@@ -330,6 +330,8 @@ export function matchItems(itemIds: string[]) {
           fs.writeFileSync(targetFile, codeToWrite, 'utf8');
         } catch (e: any) {
           console.error(`[Orchestrator] Error parsing or applying candidate fix: ${e.message}`);
+          this.updateMissionStatus(missionId, 'FAILED');
+          return;
         }
       }
     }
