@@ -1,0 +1,27 @@
+{
+  "name": "brahma",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doctor": "tsx scripts/doctor.ts",
+    "dev": "npm run doctor; echo 'Starting TrueForge and App...'; npx @truefoundry/trueforge"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuhinthewuh/BRAHMA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kuhinthewuh/BRAHMA/issues"
+  },
+  "homepage": "https://github.com/kuhinthewuh/BRAHMA#readme",
+  "dependencies": {
+    "@truefoundry/trueforge": "^0.1.4",
+    "@truefoundry/trueforge-sdk": "^0.1.3"
+  }
+}
