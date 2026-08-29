@@ -1,17 +1,22 @@
 import Fastify from 'fastify';
-import { matchItems, setIncidentMode, incidentMode } from './requestMatcher.js';
+import { matchItems } from './requestMatcher.js';
 
 const fastify = Fastify({ logger: false });
 
+let highLoad = false;
+
 fastify.get('/health', async (request, reply) => {
-  return { status: 'ok', incidentMode };
+  return { status: 'ok', highLoad };
 });
 
 fastify.post('/checkout', async (request, reply) => {
   const start = process.hrtime.bigint();
   
-  // Dummy work
-  const items = matchItems(['item-150', 'item-4999', 'item-8000', 'item-1234', 'item-19000']);
+  // Dummy work: low load is 5 items, high load is 5000 items
+  const count = highLoad ? 5000 : 5;
+  const dummyIds = Array.from({ length: count }, (_, i) => `item-${Math.floor(Math.random() * 20000)}`);
+  
+  const items = matchItems(dummyIds);
   
   const end = process.hrtime.bigint();
   const latencyMs = Number(end - start) / 1_000_000;
@@ -24,13 +29,13 @@ fastify.post('/checkout', async (request, reply) => {
 });
 
 fastify.post('/incident', async (request, reply) => {
-  setIncidentMode(true);
-  return { status: 'incident_injected', incidentMode: true };
+  highLoad = true;
+  return { status: 'incident_injected', highLoad: true };
 });
 
 fastify.post('/reset', async (request, reply) => {
-  setIncidentMode(false);
-  return { status: 'reset_successful', incidentMode: false };
+  highLoad = false;
+  return { status: 'reset_successful', highLoad: false };
 });
 
 const start = async () => {

@@ -72,6 +72,7 @@ export const BrahmaEventTypeSchema = z.enum([
   'worker.spawned', 'worker.state_changed', 'worker.checkpointed',
   'worker.failed', 'worker.recovery_started', 'worker.recovered',
   'worker.replaced', 'worker.retired',
+  'trueforge.session.created', 'trueforge.session.failed',
   'evidence.added', 'root_cause.confirmed',
   'remediation.started', 'remediation.candidate_created',
   'sandbox.started', 'sandbox.test_result', 'sandbox.benchmark_result',
