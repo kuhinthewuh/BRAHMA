@@ -313,10 +313,11 @@ export class Orchestrator {
       const candidatePath = path.join(artifactsDir, 'candidate.json');
       
       if (fs.existsSync(candidatePath)) {
-        const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
-        const targetFile = path.resolve(process.cwd(), '../../demo/checkout-service', candidate.filename || 'src/requestMatcher.ts');
-        
-        const fallbackCode = `const inventory = Array.from({ length: 20000 }, (_, i) => ({ id: \`item-\${i}\`, name: \`Product \${i}\`, price: (i % 100) + 0.99 }));
+        try {
+          const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+          const targetFile = path.resolve(process.cwd(), '../../demo/checkout-service', candidate.filename || 'src/requestMatcher.ts');
+          
+          const fallbackCode = `const inventory = Array.from({ length: 20000 }, (_, i) => ({ id: \`item-\${i}\`, name: \`Product \${i}\`, price: (i % 100) + 0.99 }));
 export function matchItems(itemIds: string[]) {
   const results = [];
   const map = new Map(inventory.map(i => [i.id, i]));
@@ -325,15 +326,22 @@ export function matchItems(itemIds: string[]) {
   }
   return results;
 }`;
-        const codeToWrite = candidate.patchedCode || candidate.patched_code || fallbackCode;
-        fs.writeFileSync(targetFile, codeToWrite, 'utf8');
+          const codeToWrite = candidate.patchedCode || candidate.patched_code || fallbackCode;
+          fs.writeFileSync(targetFile, codeToWrite, 'utf8');
+        } catch (e: any) {
+          console.error(`[Orchestrator] Error parsing or applying candidate fix: ${e.message}`);
+          this.updateMissionStatus(missionId, 'FAILED');
+          return;
+        }
       }
     }
     
     // Clear incident mode
     try {
        await fetch('http://localhost:8080/reset', { method: 'POST' });
-    } catch (e) { }
+    } catch (e: any) { 
+       console.warn(`[Orchestrator] Non-fatal: Could not reset incident server: ${e.message}`);
+    }
     
     await this.delay(2000);
     this.updateMissionStatus(missionId, 'COMPLETED');
